@@ -26,6 +26,7 @@
 
 </div>
 
+
 <div id="left_side">
 
 {% block left_menu %}
@@ -46,6 +47,13 @@ Content
 
 {% endblock %}
 </div>
+
+
+{% block git_log %}
+	{% for item in gitlog reversed %}		
+      		<li>{{item.commit_date}} - {{ item.autor}} {{item.cmt}}</li>
+	{% endfor %}
+{% endblock %}
 
 <div id="footer">
 {% block footer_right %}

@@ -145,4 +145,13 @@ class Link(models.Model):
 
     def __unicode__(self):
             return self.url;
-
+        
+class GitLog(models.Model):
+    commit_id = models.CharField(max_length = 42, unique=True)
+    autor     = models.CharField(max_length=140) 
+    commit_date= models.DateTimeField()
+    #locs = models.IntegerField(max_length=10)
+    #adds = models.IntegerField(max_length=10)
+    #dels = models.IntegerField(max_length=10)
+    cmt  = models.TextField()
+    

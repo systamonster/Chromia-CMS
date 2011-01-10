@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from models import Menu, Category, Article
+from models import Menu, Category, Article, GitLog
 
 def get_path(request, path='home', template='page.html', prefix='/'):
     if path:
@@ -26,6 +26,11 @@ def get_path(request, path='home', template='page.html', prefix='/'):
     for menu in menus:
         menu.update_selection(select_list)
         context[menu.name] = menu
+    
+    if path=="download":
+        gitlog = GitLog.objects.all()
+        context["gitlog"] = gitlog    
+        
     context['prefix'] = prefix
     context['user'] = request.user
     return render_to_response(template, context)
