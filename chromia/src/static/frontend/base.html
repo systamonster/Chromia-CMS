@@ -1,68 +1,50 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-
-<!-- Meta Data -->
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Chromia</title>
+<title>Chromia Community</title>
+<link rel="stylesheet" type="text/css" href="/web/css/style.css" media="screen" />
 </head>
 <body>
-<div id="page_wrapper">
-<div id="header_wrapper">
-
-<div id="header"> 
+<div id="header">
+<h1>Minimalistic Design Template</h1>
+ <div id="menu">
+  <ul id="nav">
+   {% block main_menu %}
+       <li id="active"><a href="#" id="current">Item one</a></li>
+       <li><a href="#">Item two</a></li>
+   {% endblock %}
+  </ul>
+ </div>
 </div>
-
-<div id="navcontainer">
-
-<ul id="navlist">
-{% block main_menu %}
-	<li id="active"><a href="#" id="current">Item one</a></li>
-	<li><a href="#">Item two</a></li>
-{% endblock %}
-</ul>
-</div>
-
-</div>
-
-
-<div id="left_side">
-
-{% block left_menu %}
-    <h3>{{ left_menu.parent_cat_selected.title }}</h3>
-{% endblock %}
-
-</div>
-
-
 <div id="content">
-
+<div id="right">
+<h2>Project Chromia</h2>
 {% block content %}
-<h3>Bla bla bla</h3>
-
-<div class='featurebox_center'>
-Content
-</div>
-
 {% endblock %}
-</div>
-
-
 {% block git_log %}
-	{% for item in gitlog reversed %}		
-      		<li>{{item.commit_date}} - {{ item.autor}} {{item.cmt}}</li>
-	{% endfor %}
+       {% for item in gitlog reversed %}                
+                 <li>{{item.commit_date}} - {{ item.autor}} {{item.cmt}}</li>
+       {% endfor %}
 {% endblock %}
-
-<div id="footer">
-{% block footer_right %}
-	<a href="#">Link One</a> | 
-{% endblock %}  
 </div>
-
+	
+<div id="left">
+	<div class="box">
+			<h2>News :</h2>	
+			<p>This XHTML/CSS Template was inspired by great NiftyCube layouts. It is released under GPL and it is xhtml/css valid.</p>
+	</div>
+			
+	<div class="box">
+	{% block left_menu %}
+   	<h3>{{ left_menu.parent_cat_selected.title }}</h3>
+	{% endblock %}
+	</div>
+		
+    <div class="box">
+	   <div style="font-size: 0.8em;">Design by <a href="http://www.minimalistic-design.net">Minimalistic Design</a></div>
+	</div>
 </div>
-
-
+</div>
 </body>
 </html>
