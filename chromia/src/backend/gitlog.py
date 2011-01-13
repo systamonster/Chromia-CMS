@@ -64,23 +64,23 @@ def show_data():
 		   db.rollback()
 
 		   
-		def md5(fileName, excludeLine="", includeLine=""):
-		    """Compute md5 hash of the specified file"""
-		    m = hashlib.md5()
-		    try:
-		        fd = open(fileName,"rb")
-		    except IOError:
-		        print "Unable to open the file in readmode:", filename
-		        return
-		    eachLine = fd.readline()
-		    while eachLine:
-		        if excludeLine and eachLine.startswith(excludeLine):
-		            continue
-		        m.update(eachLine)
-		        eachLine = fd.readline()
-		    m.update(includeLine)
-		    fd.close()
-		    return m.hexdigest()
+def md5(fileName, excludeLine="", includeLine=""):
+    """Compute md5 hash of the specified file"""
+    m = hashlib.md5()
+    try:
+        fd = open(fileName,"rb")
+    except IOError:
+        print "Unable to open the file in readmode:", filename
+        return
+    eachLine = fd.readline()
+    while eachLine:
+        if excludeLine and eachLine.startswith(excludeLine):
+            continue
+        m.update(eachLine)
+        eachLine = fd.readline()
+    m.update(includeLine)
+    fd.close()
+    return m.hexdigest()
 		   
 		   
 			   
