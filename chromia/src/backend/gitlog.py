@@ -64,14 +64,23 @@ def show_data():
 		   db.rollback()
 
 		   
-def md5_for_file(f, block_size=2**20):
-    md5 = hashlib.md5()
-    while True:
-        data = f.read(block_size)
-        if not data:
-            break
-        md5.update(data)
-    return md5.digest()
+		def md5(fileName, excludeLine="", includeLine=""):
+		    """Compute md5 hash of the specified file"""
+		    m = hashlib.md5()
+		    try:
+		        fd = open(fileName,"rb")
+		    except IOError:
+		        print "Unable to open the file in readmode:", filename
+		        return
+		    eachLine = fd.readline()
+		    while eachLine:
+		        if excludeLine and eachLine.startswith(excludeLine):
+		            continue
+		        m.update(eachLine)
+		        eachLine = fd.readline()
+		    m.update(includeLine)
+		    fd.close()
+		    return m.hexdigest()
 		   
 		   
 			   
@@ -116,7 +125,7 @@ if have_changes==1:
 	
 	if (os.path.isfile(chromia_pub_dir+out_file)):
 		f_build_date = time.ctime(os.path.getmtime(chromia_pub_dir+out_file))
-		f_md5        = md5_for_file(chromia_pub_dir+out_file)
+		f_md5        = md5(chromia_pub_dir+out_file)
 		f_size 		 = os.path.getsize(chromia_pub_dir+out_file)
 		
 		cursor = db.cursor()
