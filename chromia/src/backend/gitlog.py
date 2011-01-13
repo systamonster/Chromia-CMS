@@ -19,7 +19,8 @@
 
 
 import MySQLdb
-import os
+import os, time
+import hashlib
 
 from rfc822 import parsedate
 from time import mktime
@@ -35,7 +36,11 @@ capture_commit_text=0
 commit_id=None
 have_changes  = None
 
-os.environ["GIT_DIR"] = "/Volumes/Data1/environment/chromia.org/chromia.repo/chromia/.git/"
+chromia_ver = "0.1" #Future get from README soruce file
+chromia_src_dir = "/home/kg/builds/chromia/chromia/"
+chromia_pub_dir = "/home/kg/builds/pub/"
+
+os.environ["GIT_DIR"] = chromia_src_dir +".git/"
 os.system("git remote update")
 
 db = MySQLdb.connect("localhost","root","","chromia" )
@@ -55,11 +60,19 @@ def show_data():
 		   cursor.execute(sql)		    
    		   db.commit()  
    		   return 1 		
-   		   
-   		   
-   		   
 		except:
 		   db.rollback()
+
+		   
+def md5_for_file(f, block_size=2**20):
+    md5 = hashlib.md5()
+    while True:
+        data = f.read(block_size)
+        if not data:
+            break
+        md5.update(data)
+    return md5.digest()
+		   
 		   
 			   
 for x in popen('git log --reverse -p'):
@@ -85,11 +98,35 @@ for x in popen('git log --reverse -p'):
         if len(x.strip())>1 and capture_commit_text==1:
                 cmt.append(x[:-1].strip())
 	
-#show_data()      
-db.close() 
-#print os.environ["GIT_DIR"][:-5]
  
+# Build new version if have new comiits 
 if have_changes==1:
-	os.system("build_new.py")
+	cursor = db.cursor()
+	cursor.execute ("SELECT MAX(ID) FROM cms_chromiabuild")
+	last_build = cursor.fetchone ()[0]
 	
 	
+	if (last_build==None):
+		last_build = 1
+	else:
+		last_build +=1		
+		
+	os.system("./build_deb.sh chromia-%s.%s &s" %(chromia_ver, last_build, chromia_src_dir) )
+	out_file = "chromia_%s.%d-1_i386.deb" % (chromia_ver,last_build)
+	
+	if (os.path.isfile(chromia_pub_dir+out_file)):
+		f_build_date = time.ctime(os.path.getmtime(chromia_pub_dir+out_file))
+		f_md5        = md5_for_file(chromia_pub_dir+out_file)
+		f_size 		 = os.path.getsize(chromia_pub_dir+out_file)
+		
+		cursor = db.cursor()
+		sql = "INSERT INTO cms_chromiabuild(version_id, md5sum, build_date, file_size,  package_file) \
+		       VALUES ('%s', '%s', '%s', '%d', , '%s' )" % \
+		       ( "chromia_%s.%d"%(chromia_ver,last_build), f_md5, f_build_date, f_size, out_file)
+		try:
+		   cursor.execute(sql)		    
+   		   db.commit()  		
+		except:
+		   db.rollback()
+	
+db.close()	
