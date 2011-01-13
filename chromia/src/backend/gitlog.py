@@ -41,7 +41,7 @@ chromia_src_dir = "/home/kg/builds/chromia/chromia/"
 chromia_pub_dir = "/home/kg/builds/pub/"
 
 os.environ["GIT_DIR"] = chromia_src_dir +".git/"
-os.system("git remote update")
+os.system("git pull")
 
 db = MySQLdb.connect("localhost","root","","chromia" )
 
@@ -111,7 +111,7 @@ if have_changes==1:
 	else:
 		last_build +=1		
 		
-	os.system("./build_deb.sh chromia-%s.%s &s" %(chromia_ver, last_build, chromia_src_dir) )
+	os.system("./build_deb.sh chromia-%s.%s %s" %(chromia_ver, last_build, chromia_src_dir) )
 	out_file = "chromia_%s.%d-1_i386.deb" % (chromia_ver,last_build)
 	
 	if (os.path.isfile(chromia_pub_dir+out_file)):
@@ -121,7 +121,7 @@ if have_changes==1:
 		
 		cursor = db.cursor()
 		sql = "INSERT INTO cms_chromiabuild(version_id, md5sum, build_date, file_size,  package_file) \
-		       VALUES ('%s', '%s', '%s', '%d', , '%s' )" % \
+		       VALUES ('%s', '%s', '%s', '%d','%s' )" % \
 		       ( "chromia_%s.%d"%(chromia_ver,last_build), f_md5, f_build_date, f_size, out_file)
 		try:
 		   cursor.execute(sql)		    
