@@ -150,8 +150,11 @@ class GitLog(models.Model):
     commit_id = models.CharField(max_length = 42, unique=True)
     autor     = models.CharField(max_length=140) 
     commit_date= models.DateTimeField()
-    #locs = models.IntegerField(max_length=10)
-    #adds = models.IntegerField(max_length=10)
-    #dels = models.IntegerField(max_length=10)
     cmt  = models.TextField()
+    
+class ChromiaBuild(models.Model):
+    version_id = models.CharField(max_length=42)
+    md5sum     = models.CharField(max_length=34)
+    build_date = models.DateTimeField()
+    package_file = models.CharField(max_length=100)    
     

@@ -33,13 +33,14 @@ autor=None
 h=[]
 capture_commit_text=0
 commit_id=None
+have_changes  = None
 
 os.environ["GIT_DIR"] = "/Volumes/Data1/environment/chromia.org/chromia.repo/chromia/.git/"
 os.system("git remote update")
- 
-db = MySQLdb.connect("localhost","root","","chromia" )
- 
 
+db = MySQLdb.connect("localhost","root","","chromia" )
+
+ 
 def show_data():
 	if cmt is not None:
 		commit_msg = cmt.__str__().replace(",","").replace("'","").replace("[","\n\r").replace("]","\n\r").strip()
@@ -51,11 +52,16 @@ def show_data():
 		       VALUES ('%s', '%s', '%s', '%s' )" % \
 		       (commit_id, autor, d, commit_msg)
 		try:
-		   cursor.execute(sql)
-   		   db.commit()
+		   cursor.execute(sql)		    
+   		   db.commit()  
+   		   return 1 		
+   		   
+   		   
+   		   
 		except:
 		   db.rollback()
-
+		   
+			   
 for x in popen('git log --reverse -p'):
 
 	if x.startswith('Date:'):	
@@ -72,12 +78,18 @@ for x in popen('git log --reverse -p'):
  	
 	if x.startswith('diff --') and capture_commit_text==1 :
                 capture_commit_text=0
-                show_data()
+                if show_data() ==1:
+                	have_changes=1
                 cmt=[]
 		
         if len(x.strip())>1 and capture_commit_text==1:
                 cmt.append(x[:-1].strip())
 	
 #show_data()      
-db.close()  
-
+db.close() 
+#print os.environ["GIT_DIR"][:-5]
+ 
+if have_changes==1:
+	os.system("build_new.py")
+	
+	
