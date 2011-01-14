@@ -106,8 +106,15 @@
 	
 <div id="left">
 	<div class="box">
-			<h2>News :</h2>	
-			<p>This XHTML/CSS Template was inspired by great NiftyCube layouts. It is released under GPL and it is xhtml/css valid.</p>
+			<h2>Twitter {{twitter_user}} :</h2>	
+			<p>
+			{% block tweets %}
+				{% for item in tweets %}
+				{{item.created_at}} <br>
+					{{item.text}} <br<br>
+				{% endfor %}  
+			{% endblock %}
+			</p>
 	</div>
 			
 	<div class="box">

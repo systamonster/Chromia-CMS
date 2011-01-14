@@ -93,9 +93,10 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.doc.XViewMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'chromia.urls'
@@ -141,6 +142,17 @@ LOGGING = {
     }
 }
  
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cms_cache',
+    }
+}
+ 
+ 
 BUGZILLA_LINK ='https://bugzilla.libresoft.es/show_bug.cgi?id='
+TWITTER_USER="mswl"
+TWITTER_TWITS=5
+TWITTER_CACHE=120
 
 

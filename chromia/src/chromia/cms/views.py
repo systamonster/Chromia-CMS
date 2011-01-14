@@ -2,6 +2,9 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from models import Menu, Category, Article, GitLog, ChromiaBuild
+from django.core.cache import cache
+from datetime import datetime
+import twitter
 import re
 
 def redirect_external(request):
@@ -34,7 +37,7 @@ def get_path(request, path='home', template='page.html', prefix='/'):
     for menu in menus:
         menu.update_selection(select_list)
         context[menu.name] = menu
-    
+                
     if path=="log":
         context["autors"]  = GitLog.objects.distinct().values("autor").order_by("autor")
         if request.POST and not request.POST['autor'] =="ALL":
@@ -61,8 +64,24 @@ def get_path(request, path='home', template='page.html', prefix='/'):
     if path =="home":
         builds = ChromiaBuild.objects.all().order_by("-build_date")
         context["last_build"] = builds[0]
-        
     
+    #Twitter Bug 278    
+    tweets = cache.get( 'tweets' )
+    if tweets:
+        context["tweets"]=tweets 
+    else:
+        try:
+            tweets = twitter.Api().GetUserTimeline(settings.TWITTER_USER)
+            if len(tweets)>0:
+                tweets = tweets[:settings.TWITTER_TWITS]
+                for tweet in tweets:
+                    tweet.created_at = datetime.strptime( tweet.created_at, "%a %b %d %H:%M:%S +0000 %Y" )
+ 
+                cache.set( 'tweets', tweets, settings.TWITTER_CACHE )
+                context["tweets"]=tweets 
+        except:
+            "error twitter"
+    context["twitter_user"] = settings.TWITTER_USER 
         
          
     context['prefix'] = prefix
