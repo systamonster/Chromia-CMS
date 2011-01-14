@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block left_menu %}
-  <h3>{{ left_menu.parent_cat_selected.title }}</h3>
+  
 
  
 
@@ -38,7 +38,7 @@
 {% block content %}
 	{% for art in category.main_articles %}
 	<h3>{{ art.title }}</h3>
-	<div class='featurebox_center'>
+	<div>
 	{{ art.text }}
 	</div>
 	{% endfor %}
@@ -49,9 +49,9 @@
 	{% endfor %}
 	
 	{% if not category.main_articles and not category.articles %}
-	<div class='featurebox_center'>
+	<div>
 	  <p>
-	   No data.	  </p>
+	  </p>
 </div>
 	{% endif %}
 	

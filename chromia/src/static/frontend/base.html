@@ -62,6 +62,7 @@
 			 		 <option{% ifequal item.autor|stringformat:"s" autor_selected %} selected="selected" {% endifequal %}>{{ item.autor }}</option>			 					 		
 			 {% endfor %}
 			 </select>
+			 
 		 </form>
 		 </div>
 		 
@@ -90,6 +91,16 @@
        
 {% endblock %}
 
+
+{% block last_build %}
+	{% if last_build %}
+			<br>
+			<b>Latest release</b> <a href="/pub/{{last_build.package_file}}">{{last_build.version_id}}</a>  ({{last_build.build_date}})	
+			<br>
+			<br>
+			<br>
+	{% endif %}
+{% endblock %}
 
 </div>
 	

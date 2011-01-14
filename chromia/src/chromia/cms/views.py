@@ -1,5 +1,12 @@
 from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
 from models import Menu, Category, Article, GitLog, ChromiaBuild
+
+
+def redirect_external(request):
+    r=request.META['PATH_INFO'].split("/redirect/")[1]
+    return  HttpResponseRedirect(r)
+    
 
 def get_path(request, path='home', template='page.html', prefix='/'):
     if path:
@@ -29,9 +36,6 @@ def get_path(request, path='home', template='page.html', prefix='/'):
     
     if path=="log":
         context["autors"]  = GitLog.objects.distinct().values("autor").order_by("autor")
-        
-        
-        
         if request.POST and not request.POST['autor'] =="ALL":
             context["autor_selected"] = request.POST['autor']
             context["gitlog"] = GitLog.objects.all().filter(autor=request.POST['autor'])
@@ -42,6 +46,12 @@ def get_path(request, path='home', template='page.html', prefix='/'):
     if path =="download":
         builds = ChromiaBuild.objects.all()
         context["builds"] = builds
+        
+    if path =="home":
+        builds = ChromiaBuild.objects.all().order_by("-build_date")
+        context["last_build"] = builds[0]
+        
+    
         
          
     context['prefix'] = prefix
