@@ -28,9 +28,17 @@ def get_path(request, path='home', template='page.html', prefix='/'):
         context[menu.name] = menu
     
     if path=="log":
-        gitlog = GitLog.objects.all() 
-        context["gitlog"] = gitlog
-    
+        context["autors"]  = GitLog.objects.distinct().values("autor").order_by("autor")
+        
+        
+        
+        if request.POST and not request.POST['autor'] =="ALL":
+            context["autor_selected"] = request.POST['autor']
+            context["gitlog"] = GitLog.objects.all().filter(autor=request.POST['autor'])
+        else:
+            context["gitlog"] = GitLog.objects.all()         
+        
+        
     if path =="download":
         builds = ChromiaBuild.objects.all()
         context["builds"] = builds
@@ -39,4 +47,3 @@ def get_path(request, path='home', template='page.html', prefix='/'):
     context['prefix'] = prefix
     context['user'] = request.user
     return render_to_response(template, context)
-

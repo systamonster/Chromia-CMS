@@ -53,7 +53,19 @@
 
 {% block git_log %}
 		
-		{% if gitlog %}		
+		{% if gitlog %}
+		<div style="text-align:right">
+		<form method="POST" action="." name="frm_by_autor" id="frm_by_autor">
+			<label>By autor:</label> <select name="autor" OnChange="document.frm_by_autor.submit()">
+			    <option value="ALL">ALL</option>
+			 {% for item in autors %}			 		
+			 		 <option{% ifequal item.autor|stringformat:"s" autor_selected %} selected="selected" {% endifequal %}>{{ item.autor }}</option>			 					 		
+			 {% endfor %}
+			 </select>
+		 </form>
+		 </div>
+		 
+				
 		<table>
 		<tr>
 			<th>Date</th>
