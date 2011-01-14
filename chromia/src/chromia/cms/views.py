@@ -1,7 +1,8 @@
 from django.shortcuts import render_to_response
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from models import Menu, Category, Article, GitLog, ChromiaBuild
-
+import re
 
 def redirect_external(request):
     r=request.META['PATH_INFO'].split("/redirect/")[1]
@@ -38,10 +39,20 @@ def get_path(request, path='home', template='page.html', prefix='/'):
         context["autors"]  = GitLog.objects.distinct().values("autor").order_by("autor")
         if request.POST and not request.POST['autor'] =="ALL":
             context["autor_selected"] = request.POST['autor']
-            context["gitlog"] = GitLog.objects.all().filter(autor=request.POST['autor'])
+            data = GitLog.objects.all().filter(autor=request.POST['autor'])
         else:
-            context["gitlog"] = GitLog.objects.all()         
-        
+            data = GitLog.objects.all()
+            
+        result =[]
+        for log in data:
+            log.cmt=log.cmt.replace("\n",",").replace("-","").replace(", ,",",")
+            bug = re.findall('[#][0-9]{1,8}', log.cmt)
+            if len(bug)>0:
+                log.cmt = log.cmt.replace(bug[0],"<a target=\"_blank\" href=\"%s\">%s</a>"
+                                          %(settings.BUGZILLA_LINK+bug[0][1:] ,bug[0]) )
+            result.append(log)
+            
+        context["gitlog"] =result         
         
     if path =="download":
         builds = ChromiaBuild.objects.all()

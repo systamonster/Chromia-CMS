@@ -80,7 +80,7 @@
                  <tr>
                  	<td style="padding:0px 10px 0px 0px" nowrap="nowrap">{{item.commit_date}}</td>
                  	<td nowrap="nowrap">{{ item.autor}}</td>
-                 	<td style="padding:0px 50px 0px 10px">{{item.cmt}}</td>
+                 	<td style="padding:5px 50px 5px 10px">{{item.cmt|safe}}</td>
                  	<td nowrap="nowrap">{{item.files}}</td>
                  	<td nowrap="nowrap">+{{item.insertions}}</td>
                  	<td nowrap="nowrap">-{{item.deletions}}</td>

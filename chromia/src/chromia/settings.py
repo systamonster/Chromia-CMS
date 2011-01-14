@@ -140,5 +140,7 @@ LOGGING = {
         },
     }
 }
+ 
+BUGZILLA_LINK ='https://bugzilla.libresoft.es/show_bug.cgi?id='
 
 
