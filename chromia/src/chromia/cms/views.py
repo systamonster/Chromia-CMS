@@ -6,7 +6,7 @@ from django.core.cache import cache
 from datetime import datetime
 import twitter
 import re
-
+  
 def redirect_external(request):
     r=request.META['PATH_INFO'].split("/redirect/")[1]
     return  HttpResponseRedirect(r)
