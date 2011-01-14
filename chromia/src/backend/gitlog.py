@@ -20,24 +20,29 @@
 
 import MySQLdb
 import os, time
+
 import hashlib
+import subprocess
+import re
+import sys
 
 from rfc822 import parsedate
 from time import mktime
 from datetime import datetime
-from os import popen
-from sys import argv,stderr,stdout
-from subprocess import call
 
 cmt=[]
 autor=None
-h=[]
-capture_commit_text=0
 commit_id=None
+files=None
+insertions=None
+deletions=None
+
+capture_commit_text=0
 have_changes  = None
 
 chromia_ver = "0.1" #Future get from README soruce file
-chromia_src_dir = "/home/kg/builds/chromia/chromia/"
+#chromia_src_dir = "/home/kg/builds/chromia/chromia/"
+chromia_src_dir = "/Volumes/Data1/environment/chromia.org/chromia.repo/chromia/"  
 chromia_pub_dir = "/home/kg/builds/pub/"
 
 os.environ["GIT_DIR"] = chromia_src_dir +".git/"
@@ -45,25 +50,7 @@ os.system("git pull")
 
 db = MySQLdb.connect("localhost","root","","chromia" )
 
- 
-def show_data():
-	if cmt is not None:
-		commit_msg = cmt.__str__().replace(",","").replace("'","").replace("[","\n\r").replace("]","\n\r").strip()
-		pstr="%s %s %s %s"%(autor,commit_id,d,commit_msg)
-		#print pstr
-		h.append((autor,commit_id,d,commit_msg))
-		cursor = db.cursor()
-		sql = "INSERT INTO cms_gitlog(commit_id, autor, commit_date, cmt) \
-		       VALUES ('%s', '%s', '%s', '%s' )" % \
-		       (commit_id, autor, d, commit_msg)
-		try:
-		   cursor.execute(sql)		    
-   		   db.commit()  
-   		   return 1 		
-		except:
-		   db.rollback()
 
-		   
 def md5(fileName, excludeLine="", includeLine=""):
     """Compute md5 hash of the specified file"""
     m = hashlib.md5()
@@ -82,32 +69,86 @@ def md5(fileName, excludeLine="", includeLine=""):
     fd.close()
     return m.hexdigest()
 		   
-		   
-			   
-for x in popen('git log --reverse -p'):
 
-	if x.startswith('Date:'):	
-		d=datetime(*parsedate(x[5:])[:7])
-		t=mktime(parsedate(x[5:]))		
-		capture_commit_text=1
-		continue
+def modification_date(filename):
+    t = os.path.getmtime(filename)
+    return datetime.fromtimestamp(t)		   
+
+#
+#def show_data():
+#	
+		   			   
+#for x in popen('git log --reverse -p'):
+#
+#	if x.startswith('Date:'):	
+#		d=datetime(*parsedate(x[5:])[:7])
+#		t=mktime(parsedate(x[5:]))		
+#		capture_commit_text=1
+#		continue
 	
-	if x.startswith('commit '):
-		commit_id=x[7:].strip()	
+#	if x.startswith('commit '):
+#		commit_id=x[7:].strip()	
 
-	if x.startswith('Author:'):
- 	 	autor=x[7:].strip()
+#	if x.startswith('Author:'):
+#	 	autor=x[7:].strip()
  	
-	if x.startswith('diff --') and capture_commit_text==1 :
-                capture_commit_text=0
-                if show_data() ==1:
-                	have_changes=1
-                cmt=[]
+#	if x.startswith('diff --') and capture_commit_text==1 :
+#                capture_commit_text=0
+#                if show_data() ==1:
+#                	have_changes=1
+#                cmt=[]
 		
-        if len(x.strip())>1 and capture_commit_text==1:
-                cmt.append(x[:-1].strip())
+#        if len(x.strip())>1 and capture_commit_text==1:
+#                cmt.append(x[:-1].strip())
+
+
+def add_commit_info():
 	
- 
+	if cmt is not None:
+		commit_msg = cmt.__str__().replace(",","").replace("'","").replace("[","\n\r").replace("]","").replace("-","\n\r -").strip()
+		cursor = db.cursor()
+		sql = "INSERT INTO cms_gitlog(commit_id, autor, commit_date, cmt, files, insertions, deletions) \
+		       VALUES ('%s', '%s', '%s', '%s' ,'%d', '%d', '%d')" % \
+		       (commit_id, autor, d, commit_msg, files, insertions, deletions )
+		try:
+		   cursor.execute(sql)		    
+  		   db.commit()  
+   		   return 1 		
+		except:
+		   db.rollback()
+
+git = subprocess.Popen(["git", "log", "--shortstat", "--reverse"], stdout=subprocess.PIPE)
+out, err = git.communicate()
+total_files, total_insertions, total_deletions = 0, 0, 0
+
+for line in out.split('\n'):
+    if not line: continue
+    
+    if line.startswith('commit '):
+    	commit_id=line[7:].strip()
+    	
+    if line.startswith('Author:'):
+    	a = line[7:].split("<")
+    	autor = a[0].strip()
+        
+    if line.startswith('Date:'):
+    	d=datetime(*parsedate(line[5:])[:7])
+    	t=mktime(parsedate(line[5:]))
+    	capture_commit_text=1
+    	continue
+    
+    data = re.findall(' (\d+) files changed, (\d+) insertions\(\+\), (\d+) deletions\(-\)', line)
+    if len(data)>0: # final commit
+    	capture_commit_text = 0
+    	files, insertions, deletions = ( int(x) for x in data[0] )
+    	if add_commit_info()==1:
+    		have_changes = 1
+    	cmt=[]
+    	
+    if len(line.strip())>1 and capture_commit_text==1:
+    	cmt.append(line.strip())
+    		    
+ 	
 # Build new version if have new comiits 
 if have_changes==1:
 	cursor = db.cursor()
@@ -124,7 +165,7 @@ if have_changes==1:
 	out_file = "chromia_%s.%d-1_i386.deb" % (chromia_ver,last_build)
 	
 	if (os.path.isfile(chromia_pub_dir+out_file)):
-		f_build_date = time.ctime(os.path.getmtime(chromia_pub_dir+out_file))
+		f_build_date = modification_date(chromia_pub_dir+out_file)
 		f_md5        = md5(chromia_pub_dir+out_file)
 		f_size 		 = os.path.getsize(chromia_pub_dir+out_file)
 		

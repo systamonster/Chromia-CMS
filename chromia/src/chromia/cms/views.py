@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response
-from models import Menu, Category, Article, GitLog
+from models import Menu, Category, Article, GitLog, ChromiaBuild
 
 def get_path(request, path='home', template='page.html', prefix='/'):
     if path:
@@ -27,20 +27,16 @@ def get_path(request, path='home', template='page.html', prefix='/'):
         menu.update_selection(select_list)
         context[menu.name] = menu
     
-    if path=="download":
-        gitlog = GitLog.objects.all()
-        context["gitlog"] = gitlog    
+    if path=="log":
+        gitlog = GitLog.objects.all() 
+        context["gitlog"] = gitlog
+    
+    if path =="download":
+        builds = ChromiaBuild.objects.all()
+        context["builds"] = builds
         
+         
     context['prefix'] = prefix
     context['user'] = request.user
     return render_to_response(template, context)
 
-
-def plan(request, template='plan.html', prefix='/'):
-    categories = Category.objects.filter(parent__isnull=True, order__gt=0).order_by('order')
-    context = {'categories':categories, 'prefix':prefix}
-    # root nenus
-    menus = Menu.objects.all()
-    for menu in menus:
-        context[menu.name] = menu
-    return render_to_response(template, context)

@@ -7,7 +7,7 @@
 </head>
 <body>
 <div id="header">
-<h1>Minimalistic Design Template</h1>
+<h1>Chromia - The universal file converter</h1>
  <div id="menu">
   <ul id="nav">
    {% block main_menu %}
@@ -19,14 +19,66 @@
 </div>
 <div id="content">
 <div id="right">
-<h2>Project Chromia</h2>
+
+{% block builds %}
+		{% if builds %}		
+		
+		<h1>Debian packages</h1>
+		<table>
+		<tr>
+			<th style="padding:0px 150px 0px 10px">Build date</th>
+			<th style="padding:0px 50px 0px 10px">Version</th>
+			<th style="padding:0px 50px 0px 10px">Size</th>
+			<th style="padding:0px 50px 0px 10px">Md5 sum</th>
+			<th style="padding:0px 50px 0px 150px">Download</th>		
+					
+		</tr>
+       {% for item in builds reversed %}                
+                 <tr>
+                 	<td  nowrap="nowrap">{{item.build_date}}</td>
+                 	<td nowrap="nowrap">{{ item.version_id}}</td>
+                 	<td>{{item.file_size}} B</td>
+                 	<td nowrap="nowrap">{{item.md5sum}}</td>
+                 	<td style="padding:0px 50px 0px 150px"><a href="/pub/{{item.package_file}}">download .deb</a></td>
+                 </tr>
+       {% endfor %}
+       </table>
+       {% endif %}
+{% endblock %}
+
+
+
 {% block content %}
 {% endblock %}
+
 {% block git_log %}
+		
+		{% if gitlog %}		
+		<table>
+		<tr>
+			<th>Date</th>
+			<th>Autor</th>
+			<th>Message</th>
+			<th>Files</th>
+			<th>+</th>
+			<th>-</th>
+		</tr>
        {% for item in gitlog reversed %}                
-                 <li>{{item.commit_date}} - {{ item.autor}} {{item.cmt}}</li>
+                 <tr>
+                 	<td style="padding:0px 10px 0px 0px" nowrap="nowrap">{{item.commit_date}}</td>
+                 	<td nowrap="nowrap">{{ item.autor}}</td>
+                 	<td style="padding:0px 50px 0px 10px">{{item.cmt}}</td>
+                 	<td nowrap="nowrap">{{item.files}}</td>
+                 	<td nowrap="nowrap">+{{item.insertions}}</td>
+                 	<td nowrap="nowrap">-{{item.deletions}}</td>
+                 </tr>
        {% endfor %}
+       </table>
+       {% endif %}
+       
 {% endblock %}
+
+
 </div>
 	
 <div id="left">
