@@ -110,7 +110,8 @@
 			<p>
 			{% block tweets %}
 				{% for item in tweets %}
-				{{item.created_at}} <br>
+				<b>{{item.created_at}} </b> 
+				<br>
 					{{item.text}} <br<br>
 				{% endfor %}  
 			{% endblock %}
