@@ -41,14 +41,23 @@ capture_commit_text=0
 have_changes  = None
 
 chromia_ver = "0.1" #Future get from README soruce file
-#chromia_src_dir = "/home/kg/builds/chromia/chromia/"
+
+# Config section
+
 chromia_src_dir = "/Volumes/Data1/environment/chromia.org/chromia.repo/chromia/"  
 chromia_pub_dir = "/home/kg/builds/pub/"
+
+db_host         ="localhost"
+db_user         ="root"
+db_pass         =""
+db_name         ="chromia"
+
+# Main program section
 
 os.environ["GIT_DIR"] = chromia_src_dir +".git/"
 os.system("git pull")
 
-db = MySQLdb.connect("localhost","root","","chromia" )
+db = MySQLdb.connect(db_host,db_user,db_pass, db_name )
 
 
 def md5(fileName, excludeLine="", includeLine=""):
@@ -73,33 +82,6 @@ def md5(fileName, excludeLine="", includeLine=""):
 def modification_date(filename):
     t = os.path.getmtime(filename)
     return datetime.fromtimestamp(t)		   
-
-#
-#def show_data():
-#	
-		   			   
-#for x in popen('git log --reverse -p'):
-#
-#	if x.startswith('Date:'):	
-#		d=datetime(*parsedate(x[5:])[:7])
-#		t=mktime(parsedate(x[5:]))		
-#		capture_commit_text=1
-#		continue
-	
-#	if x.startswith('commit '):
-#		commit_id=x[7:].strip()	
-
-#	if x.startswith('Author:'):
-#	 	autor=x[7:].strip()
- 	
-#	if x.startswith('diff --') and capture_commit_text==1 :
-#                capture_commit_text=0
-#                if show_data() ==1:
-#                	have_changes=1
-#                cmt=[]
-		
-#        if len(x.strip())>1 and capture_commit_text==1:
-#                cmt.append(x[:-1].strip())
 
 
 def add_commit_info():
