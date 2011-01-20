@@ -12,37 +12,37 @@ Structure
 ==============================
 This section contains a brief overview of the file and directory structure in this project.
 
-	- backend/ 			- It's the main directory of backend scripts
-	- backend/gitlog.py		- It's The script checks availability of changes in the remote 
-					  (compare remote vs local with git pull) git repository and in case 
-					  of changes detection loads the information about commits into the database table cms_gitlog. 
-					  If it finds changes in git repositories, it will start  build_deb.sh.
- 					  Also reads the latest generated version that is produced (number of the new version is last+1)					  
-					  (This script should be launched from the cron with a convenient time interval for you)
+	- src/backend/ 			    - It's the main directory of backend scripts
+	- src/backend/gitlog.py		    - It's The script checks availability of changes in the remote 
+					      (compare remote vs local with git pull) git repository and in case 
+					      of changes detection loads the information about commits into the database table cms_gitlog. 
+					      If it finds changes in git repositories, it will start  build_deb.sh.
+ 					      Also reads the latest generated version that is produced (number of the new version is last+1)					  
+					      (This script should be launched from the cron with a convenient time interval for you)
 
-	- backend/build_deb.sh 		- This script runs the build and package of binary files in .deb a packet.					 
+	- src/backend/build_deb.sh 	    - This script runs the build and package of binary files in .deb a packet.					 
 
 
-	- chromia/ 			- It's the main directory of frontend scripts.
-	- chromia/settings.py		- It's a principal configuration file of the django project.
-	- chromia/urls.py		- Admin and main URL configuration file. 
-	- chromia/web_urls.py		- CMS URL configuration file.
+	- src/chromia/ 			    - It's the main directory of frontend scripts.
+	- src/chromia/settings.py	    - It's a principal configuration file of the django project.
+	- src/chromia/urls.py		    - Admin and main URL configuration file. 
+	- src/chromia/web_urls.py	    - CMS URL configuration file.
 	
-	- chromia/cms/admin.py		- It's the representation of a model in the admin interface.
-	- chromia/cms/models.py		- It's the Django domain model object file.
-	- chromia/cms/views.py		- It contains a single view, which is used to render the page shown when you visit the URL /web/*
+	- src/chromia/cms/admin.py	    - It's the representation of a model in the admin interface.
+	- src/chromia/cms/models.py   	    - It's the Django domain model object file.
+	- src/chromia/cms/views.py	    - It contains a single view, which is used to render the page shown when you visit the URL /web/*
 
-	- static/			- It's the main directory of static files like templeates, css and images.
-	- static/frontend/
-	- static/frontend/base.html     - The main site's template.
-	- static/frontend/page.html     - Auxiliary site's template (for blocks).
-	- static/frontend/css/style.css - The main CSS file with design and styles of the site.
+	- src/static/	  		    - It's the main directory of static files like templeates, css and images.
+	- src/static/frontend/
+	- src/static/frontend/base.html     - The main site's template.
+	- src/static/frontend/page.html     - Auxiliary site's template (for blocks).
+	- src/static/frontend/css/style.css - The main CSS file with design and styles of the site.
 	
-	- doc/ini_mysql_db.sql		- Database's Script creation for Mysql (with the demo data)
-	- doc/sample_apache.conf	- Sample of Apache configuration with wsgi
-	- doc/sample_django.wsgi 	- Sample of Django set for wsgi
+	- src/doc/ini_mysql_db.sql	    - Database's Script creation for Mysql (with the demo data)
+	- src/doc/sample_apache.conf	    - Sample of Apache configuration with wsgi
+	- src/doc/sample_django.wsgi 	    - Sample of Django set for wsgi
 
-	- LICENSE			- The LICENSE file
+	- LICENSE			    - The LICENSE file
 
 System requirements
 ==============================
