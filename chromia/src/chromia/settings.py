@@ -110,12 +110,12 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+    #'django.middleware.common.CommonMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
-)
+    #'django.middleware.cache.FetchFromCacheMiddleware',
+) 
 
 ROOT_URLCONF = 'chromia.urls'
 
