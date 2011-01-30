@@ -178,6 +178,7 @@ class ChromiaBuild(models.Model):
     md5sum     = models.CharField(max_length=34)
     build_date = models.DateTimeField()
     file_size  = models.IntegerField(max_length=10)
-    package_file = models.CharField(max_length=100) 
+    package_file = models.CharField(max_length=100)
+    tar_file = models.CharField(max_length=100) 
        
     

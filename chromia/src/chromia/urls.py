@@ -32,5 +32,6 @@ urlpatterns = patterns('',
     (r'^images/(.*)$', 'django.views.static.serve', {'document_root': join(settings.MEDIA_ROOT, 'images')}),
     (r'^web/redirect', 'chromia.cms.views.redirect_external'),
     (r'^web/', include('chromia.web_urls')),
+    (r'$', 'chromia.cms.views.redirect_main'),
 )
 

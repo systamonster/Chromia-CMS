@@ -24,6 +24,10 @@ from datetime import datetime
 import twitter
 import re
   
+
+def redirect_main(request):
+    return  HttpResponseRedirect("/web/home/")
+  
 def redirect_external(request):
     r=request.META['PATH_INFO'].split("/redirect/")[1]
     return  HttpResponseRedirect(r)

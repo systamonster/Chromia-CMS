@@ -160,20 +160,23 @@ class GitLog:
 
     def build_new_vesrion(self, new_version_id):                
        
-        chromia_ver = "0.1"  #Future get from README soruce file            
+        chromia_ver = "0.1"  #Future get from README soruce file
+        tar_file    = "chromia-%s.%s.tar.gz" %(chromia_ver, new_version_id)
+               
+        # Build .deb file            
         os.system("./build_deb.sh chromia-%s.%s %s" %(chromia_ver, new_version_id, self.src_dir) )
         out_file = "chromia_%s.%d-1_i386.deb" % (chromia_ver, new_version_id)
         
-        full_file_name = chromia_pub_dir+out_file
+        full_file_name = self.pub_dir+out_file
         if (os.path.isfile(full_file_name)):
             f_build_date = self.get_modification_date(full_file_name)
             f_md5        = self.get_md5sum(full_file_name)
             f_size          = os.path.getsize(full_file_name)
             
             cursor = db.cursor()
-            sql = "INSERT INTO cms_chromiabuild(version_id, md5sum, build_date, file_size,  package_file) \
+            sql = "INSERT INTO cms_chromiabuild(version_id, md5sum, build_date, file_size,  package_file, tar_file) \
                    VALUES ('%s', '%s', '%s', '%d','%s' )" % \
-                   ( "chromia_%s.%d"%(chromia_ver, new_version_id), f_md5, f_build_date, f_size, out_file)
+                   ( "chromia_%s.%d"%(chromia_ver, new_version_id), f_md5, f_build_date, f_size, out_file, tar_file)
             try:
                cursor.execute(sql)
                db.commit()          
