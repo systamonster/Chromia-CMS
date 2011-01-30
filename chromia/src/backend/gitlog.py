@@ -175,7 +175,7 @@ class GitLog:
             
             cursor = db.cursor()
             sql = "INSERT INTO cms_chromiabuild(version_id, md5sum, build_date, file_size,  package_file, tar_file) \
-                   VALUES ('%s', '%s', '%s', '%d','%s' )" % \
+                   VALUES ('%s', '%s', '%s', '%d','%s','%s' )" % \
                    ( "chromia_%s.%d"%(chromia_ver, new_version_id), f_md5, f_build_date, f_size, out_file, tar_file)
             try:
                cursor.execute(sql)
