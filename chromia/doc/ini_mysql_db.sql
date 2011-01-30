@@ -313,6 +313,7 @@ CREATE TABLE `cms_chromiabuild` (
   `build_date` datetime NOT NULL,
   `file_size` int(11) NOT NULL,
   `package_file` varchar(100) NOT NULL,
+  `tar_file` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
