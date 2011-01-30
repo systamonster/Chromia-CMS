@@ -20,28 +20,29 @@
 <div id="content">
 <div id="right">
  
+
 {% block builds %}
-		{% if builds %}		
-		
-		<h1>Packages</h1>
-		<table>
-		<tr>
-			<th style="padding:0px 150px 0px 10px">Build date</th>
-			<th style="padding:0px 50px 0px 10px">Version</th>
-			<th style="padding:0px 50px 0px 10px">Size</th>
-			<th style="padding:0px 50px 0px 10px">Md5 sum</th>
-			<th style="padding:0px 50px 0px 150px">Debian (.deb)</th>
-			<th style="padding:0px 50px 0px 50px">Tarball (.tar.gz)</th>		
-					
-		</tr>
-       {% for item in builds reversed %}                
+                {% if builds %}
+
+                <h1>Last builds</h1>
+                <table>
+                <tr>
+                        <th style="padding:0px 80px 0px 10px">Build date</th>
+                        <th style="padding:0px 50px 0px 10px">Version</th>
+                        <th style="padding:0px 50px 0px 10px">Size</th>
+                        <th style="padding:0px 0px 0px 10px">Md5 sum</th>
+                        <th style="padding:0px 0px 0px 50px">Debian package (deb)</th>
+                        <th style="padding:0px 5px 0px 10px">Soures (tar.gz)</th>   
+
+                </tr>
+       {% for item in builds reversed %}
                  <tr>
-                 	<td  nowrap="nowrap">{{item.build_date}}</td>
-                 	<td nowrap="nowrap">{{ item.version_id}}</td>
-                 	<td>{{item.file_size}} B</td>
-                 	<td nowrap="nowrap">{{item.md5sum}}</td>
-                 	<td style="padding:0px 50px 0px 150px"><a href="/pub/{{item.package_file}}">download .deb</a></td>
-                 	<td style="padding:0px 50px 0px 50px"><a href="/pub/{{item.tar_file}}">download .tar</a></td>
+                        <td  nowrap="nowrap">{{item.build_date}}</td>
+                        <td nowrap="nowrap">{{ item.version_id}}</td>
+                        <td>{{item.file_size}} B</td>
+                        <td nowrap="nowrap">{{item.md5sum}}</td>
+                        <td style="padding:0px 10px 0px 50px"><a href="/pub/{{item.package_file}}">download .deb</a></td>
+                        <td style="padding:0px 5px 0px 10px"><a href="/pub/{{item.tar_file}}">download tarball</a></td>
                  </tr>
        {% endfor %}
        </table>

@@ -22,6 +22,11 @@ BUILD_DIR="/home/kg/builds/$1/"
 
 MAINTANER_EMAIL="kirill.gordeev@gmail.com"
 
+# Clean failed builds
+cd $OUT_BUILD_DIR
+cd ..
+rm -rf *.tar.gz
+
 mkdir $BUILD_DIR
 cp -rf $IN_SOURCE_DIR* $BUILD_DIR
 cd $BUILD_DIR; ./autogen.sh
@@ -29,5 +34,7 @@ echo "ok" | dh_make --createorig -s -e $MAINTANER_EMAIL -c gpl2
 dpkg-buildpackage -rfakeroot
 cd ..; cp -rf *i386.deb $OUT_BUILD_DIR
 rm -rf $BUILD_DIR
-rm -rf *diff.gz *.dsc *.changes *.deb *.tar.gz
+rm -rf *diff.gz *.dsc *.changes *.deb
+mv *.tar.gz $OUT_BUILD_DIR/$1.tar.gz
 echo "Done"
+
